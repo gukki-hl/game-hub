@@ -6,17 +6,18 @@ const App = () => {
     <div>
       <Grid
         templateAreas={{
-          base: `"nav" "main"`, 
+          base: `"nav" "main"`,
           lg: `"nav nav" "aside main"`, //1024px
         }}
       >
         <GridItem area={"nav"}>
           <NavBar />
         </GridItem>
-        <GridItem area={"aside"} bg={"gold"}>
-          Aside
-        </GridItem>
-
+        <Show above="lg">
+          <GridItem area={"aside"} bg={"gold"}>
+            Aside
+          </GridItem>
+        </Show>
         <GridItem area={"main"} bg={"dodgerblue"}>
           Main
         </GridItem>
