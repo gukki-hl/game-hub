@@ -36,7 +36,7 @@ const PlatformIconList = ({ platforms }: PlatformIconListProps) => {
     <HStack marginY={1}>
         //遍历平台数组，使用映射对象获取对应的图标组件
       {platforms.map((p) => (
-        <Icon as={iconMap[p.slug]} color='gray.500' />
+        <Icon key={p.id} as={iconMap[p.slug]} color='gray.500' />
       ))}
     </HStack>
   );

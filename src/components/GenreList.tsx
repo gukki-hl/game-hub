@@ -1,8 +1,23 @@
-import { HStack, Image, List, ListItem, Spinner, Text } from "@chakra-ui/react";
-import useGenres from "../hooks/useGenres";
+import {
+  Button,
+  HStack,
+  Image,
+  List,
+  ListItem,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
+import useGenres, { Genre } from "../hooks/useGenres";
 import getCroppenedImageUrl from "../tool/image-url";
 
-const GenreList = () => {
+
+interface Props{
+  //接受一个函数作为props，用于处理选中游戏类型的事件
+  //这个函数会在点击某个游戏类型时被调用
+  onSelectGenre: (genre: Genre) => void;
+}
+
+const GenreList = ({onSelectGenre}:Props) => {
   const { data, isLoading, error } = useGenres();
   if (error) return null;
   if (isLoading) return <Spinner />;
@@ -16,7 +31,13 @@ const GenreList = () => {
               borderRadius={8}
               src={getCroppenedImageUrl(genre.image_background)}
             />
-            <Text fontSize="lg">{genre.name}</Text>
+            <Button
+              fontSize="lg"
+              variant="link"
+              onClick={() => onSelectGenre(genre)}
+            >
+              {genre.name}
+            </Button>
           </HStack>
         </ListItem>
       ))}
