@@ -10,14 +10,14 @@ import {
 import useGenres, { Genre } from "../hooks/useGenres";
 import getCroppenedImageUrl from "../tool/image-url";
 
-
-interface Props{
+interface Props {
   //接受一个函数作为props，用于处理选中游戏类型的事件
   //这个函数会在点击某个游戏类型时被调用
   onSelectGenre: (genre: Genre) => void;
+  selectedGenre: Genre | null;
 }
 
-const GenreList = ({onSelectGenre}:Props) => {
+const GenreList = ({ onSelectGenre, selectedGenre }: Props) => {
   const { data, isLoading, error } = useGenres();
   if (error) return null;
   if (isLoading) return <Spinner />;
@@ -34,6 +34,7 @@ const GenreList = ({onSelectGenre}:Props) => {
             <Button
               fontSize="lg"
               variant="link"
+              fontWeight={genre.id === selectedGenre?.id ? "bold" : "normal"}
               onClick={() => onSelectGenre(genre)}
             >
               {genre.name}
