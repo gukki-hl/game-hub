@@ -4,6 +4,7 @@ import GameGrid from "./components/GameGrid";
 import GenreList from "./components/GenreList";
 import { useEffect, useState } from "react";
 import { Genre } from "./hooks/useGenres";
+import { Platforms } from "./hooks/usePlatform";
 import PlatformSelector from "./components/PlatformSelector";
 
 const App = () => {
@@ -20,10 +21,13 @@ const App = () => {
   // 例如，如果选中的是一个动作游戏类型，那么selectedGenre可以是一个包含id和name的Genre对象
   // 这样可以在GameGrid中根据selectedGenre来过滤游戏列表
   const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
+  const [selectedPlatform, setSelectedPlatform] = useState<Platforms | null>(
+    null
+  );
 
   useEffect(() => {
-    console.log("Selected Genre:", selectedGenre);
-  }, [selectedGenre?.name]);
+    console.log("Selected Genre:", selectedPlatform);
+  }, [selectedPlatform?.name]);
 
   return (
     <div>
@@ -41,7 +45,7 @@ const App = () => {
           <NavBar />
         </GridItem>
         <Show above="lg">
-          <GridItem area={"aside"} paddingX={5} paddingY={8}>
+          <GridItem area={"aside"} paddingX={5}>
             <GenreList
               onSelectGenre={(genre) => setSelectedGenre(genre)}
               selectedGenre={selectedGenre}
@@ -49,8 +53,8 @@ const App = () => {
           </GridItem>
         </Show>
         <GridItem area={"main"}>
-          <PlatformSelector/>
-          <GameGrid selectedGenre={selectedGenre} />
+          <PlatformSelector selectedPlatform={selectedPlatform} onSelectPlatform={(platform) =>setSelectedPlatform(platform)  }/>
+          <GameGrid selectedGenre={selectedGenre} selectedPlatform={selectedPlatform} />
         </GridItem>
       </Grid>
     </div>

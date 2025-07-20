@@ -4,14 +4,15 @@ import GameCard from "./GameCard";
 import GameCardSkeleton from "./GameCardSkeleton";
 import GameCardContainer from "./GameCardContainer";
 import { Genre } from "../hooks/useGenres";
-
+import {Platforms} from "../hooks/usePlatform";
 
 interface Props {
   selectedGenre: Genre | null;
+  selectedPlatform:Platforms |null
 }
 // GameGrid组件接受一个selectedGenre属性，用于过滤游戏列表
-const GameGrid = ({selectedGenre}:Props) => {
-  const { data, error, isLoading } = useGame(selectedGenre);
+const GameGrid = ({selectedGenre,selectedPlatform}:Props) => {
+  const { data, error, isLoading } = useGame(selectedGenre,selectedPlatform);
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   return (
