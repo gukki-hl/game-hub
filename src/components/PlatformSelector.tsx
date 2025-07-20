@@ -13,7 +13,6 @@ const PlatformSelector = ({ onSelectPlatform ,selectedPlatform}: onSelectPlatfor
 
   if (error) return null;
   return (
-    <div>
       <Menu>
         <MenuButton as={Button} rightIcon={<BsChevronDown />} marginX="10">
           {selectedPlatform?.name || 'Platforms'}
@@ -30,7 +29,6 @@ const PlatformSelector = ({ onSelectPlatform ,selectedPlatform}: onSelectPlatfor
             ))}
         </MenuList>
       </Menu>
-    </div>
   );
 };
 
