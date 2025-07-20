@@ -7,6 +7,11 @@ import { Genre } from "./hooks/useGenres";
 import { Platforms } from "./hooks/usePlatform";
 import PlatformSelector from "./components/PlatformSelector";
 
+export interface GameQuery {
+  genre: Genre | null;
+  platform: Platforms | null;
+}
+
 const App = () => {
   // 使用状态来管理选中的游戏类型
   // 这里可以根据需要进行初始化，比如从URL参数获取,或者从本地存储中获取
@@ -20,14 +25,7 @@ const App = () => {
   // 也可以是一个Genre对象表示选中的游戏类型
   // 例如，如果选中的是一个动作游戏类型，那么selectedGenre可以是一个包含id和name的Genre对象
   // 这样可以在GameGrid中根据selectedGenre来过滤游戏列表
-  const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
-  const [selectedPlatform, setSelectedPlatform] = useState<Platforms | null>(
-    null
-  );
-
-  useEffect(() => {
-    console.log("Selected Genre:", selectedPlatform);
-  }, [selectedPlatform?.name]);
+  const [gameQuery, setGameQuery] = useState<GameQuery>({} as GameQuery);
 
   return (
     <div>
@@ -47,14 +45,19 @@ const App = () => {
         <Show above="lg">
           <GridItem area={"aside"} paddingX={5}>
             <GenreList
-              onSelectGenre={(genre) => setSelectedGenre(genre)}
-              selectedGenre={selectedGenre}
+              onSelectGenre={(genre) => setGameQuery({ ...gameQuery, genre })}
+              selectedGenre={gameQuery.genre}
             />
           </GridItem>
         </Show>
         <GridItem area={"main"}>
-          <PlatformSelector selectedPlatform={selectedPlatform} onSelectPlatform={(platform) =>setSelectedPlatform(platform)  }/>
-          <GameGrid selectedGenre={selectedGenre} selectedPlatform={selectedPlatform} />
+          <PlatformSelector
+            selectedPlatform={gameQuery.platform}
+            onSelectPlatform={(platform) =>
+              setGameQuery({ ...gameQuery, platform })
+            }
+          />
+          <GameGrid gameQuery={gameQuery} />
         </GridItem>
       </Grid>
     </div>
