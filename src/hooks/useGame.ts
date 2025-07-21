@@ -13,6 +13,7 @@ export interface Game {
     background_image: string;
     parent_platforms: { platform: platform }[];
     metacritic: number;
+    rating_top: number;
 }
 
 //接收一个selectedGenre参数，用于过滤游戏列表
