@@ -12,6 +12,8 @@ export interface Game {
   rating_top: number;
 }
 
+const create = new apiClient<Game>("/games");
+
 //接收一个selectedGenre参数，用于过滤游戏列表
 //如果selectedGenre为null，则不进行过滤，返回所有游戏
 
@@ -19,16 +21,14 @@ const useGame = (gameQuery: GameQuery) =>
   useQuery<FetchResponse<Game>, Error>({
     queryKey: ["/games", gameQuery], // 缓存 key
     queryFn: () =>
-      apiClient
-        .get<FetchResponse<Game>>("/games", {
-          params: {
-            genres: gameQuery.genre?.id,
-            parent_platforms: gameQuery.platform?.id,
-            ordering: gameQuery.sortOrders,
-            search: gameQuery.searchText,
-          },
-        })
-        .then((res) => res.data),
+      create.getAll({
+        params: {
+          genres: gameQuery.genre?.id,
+          parent_platforms: gameQuery.platform?.id,
+          ordering: gameQuery.sortOrders,
+          search: gameQuery.searchText,
+        },
+      }),
   });
 
 //你写的 useData 是自己封装的 useState + useEffect 异步处理逻辑，
