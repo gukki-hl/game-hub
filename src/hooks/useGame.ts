@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { GameQuery } from "../App";
 import apiClient, { FetchResponse } from "../services/api-client";
 import { Platforms } from "../hooks/usePlatform";
@@ -18,17 +18,22 @@ const create = new apiClient<Game>("/games");
 //如果selectedGenre为null，则不进行过滤，返回所有游戏
 
 const useGame = (gameQuery: GameQuery) =>
-  useQuery<FetchResponse<Game>, Error>({
+  useInfiniteQuery<FetchResponse<Game>, Error>({
     queryKey: ["/games", gameQuery], // 缓存 key
-    queryFn: () =>
+    queryFn: ({ pageParam = 1 }) =>
       create.getAll({
         params: {
           genres: gameQuery.genre?.id,
           parent_platforms: gameQuery.platform?.id,
           ordering: gameQuery.sortOrders,
           search: gameQuery.searchText,
+          page: pageParam,
         },
       }),
+    // 判断是否还有下一页：如果本页有数据，就尝试加载下一页（页码 = 当前页数 + 1）
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.next ? allPages.length + 1 : undefined;
+    },
   });
 
 //你写的 useData 是自己封装的 useState + useEffect 异步处理逻辑，
