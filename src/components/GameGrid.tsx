@@ -31,7 +31,6 @@ const GameGrid = ({ gameQuery }: Props) => {
 
   return (
     <>
-      //无限滚动
       <InfiniteScroll
         dataLength={fetchedGamesCount}
         hasMore={!!hasNextPage}
