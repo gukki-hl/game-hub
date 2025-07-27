@@ -1,15 +1,16 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { GameQuery } from "../App";
-import apiClient, { FetchResponse } from "../services/api-client";
-import { Platforms } from "../hooks/usePlatform";
+import {useInfiniteQuery} from "@tanstack/react-query";
+import {GameQuery} from "../App";
+import apiClient, {FetchResponse} from "../services/api-client";
+import {Platforms} from "../hooks/usePlatform";
+import ms from "ms";
 
 export interface Game {
-  id: number;
-  name: string;
-  background_image: string;
-  parent_platforms: { platform: Platforms }[];
-  metacritic: number;
-  rating_top: number;
+    id: number;
+    name: string;
+    background_image: string;
+    parent_platforms: { platform: Platforms }[];
+    metacritic: number;
+    rating_top: number;
 }
 
 const create = new apiClient<Game>("/games");
@@ -18,24 +19,24 @@ const create = new apiClient<Game>("/games");
 //如果selectedGenre为null，则不进行过滤，返回所有游戏
 
 const useGame = (gameQuery: GameQuery) =>
-  useInfiniteQuery<FetchResponse<Game>, Error>({
-    queryKey: ["/games", gameQuery], // 缓存 key
-    queryFn: ({ pageParam = 1 }) =>
-      create.getAll({
-        params: {
-          genres: gameQuery.genreId,
-          parent_platforms: gameQuery.platformId,
-          ordering: gameQuery.sortOrders,
-          search: gameQuery.searchText,
-          page: pageParam,
+    useInfiniteQuery<FetchResponse<Game>, Error>({
+        queryKey: ["/games", gameQuery], // 缓存 key
+        queryFn: ({pageParam = 1}) =>
+            create.getAll({
+                params: {
+                    genres: gameQuery.genreId,
+                    parent_platforms: gameQuery.platformId,
+                    ordering: gameQuery.sortOrders,
+                    search: gameQuery.searchText,
+                    page: pageParam,
+                },
+            }),
+        // 判断是否还有下一页：如果本页有数据，就尝试加载下一页（页码 = 当前页数 + 1）
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.next ? allPages.length + 1 : undefined;
         },
-      }),
-    // 判断是否还有下一页：如果本页有数据，就尝试加载下一页（页码 = 当前页数 + 1）
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.next ? allPages.length + 1 : undefined;
-    },
-    staleTime: 24 * 60 * 60 * 1000, // 数据在24小时内不会过期
-  });
+        staleTime: ms('24h'),// 数据在24小时内不会过期
+    });
 
 //你写的 useData 是自己封装的 useState + useEffect 异步处理逻辑，
 // 手动管理了 data, error, isLoading 三个状态，

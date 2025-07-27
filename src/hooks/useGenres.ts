@@ -1,6 +1,7 @@
 import {useQuery} from "@tanstack/react-query";
 import apiClient from "../services/api-client";
 import genre from "../data/genre";
+import ms from 'ms'
 
 export interface Genre {
     id: number;
@@ -14,7 +15,7 @@ const useGenres = () =>
     useQuery({
         queryKey: ["/genres"], // 缓存 key
         queryFn: create.getAll,
-        staleTime: 24 * 60 * 60 * 1000, // 数据在24小时内不会过期
+        staleTime: ms('24h'),// 数据在24小时内不会过期
         initialData: genre // 提供一组静态数据作为初始值
     });
 
