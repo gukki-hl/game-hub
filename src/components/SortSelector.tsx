@@ -1,12 +1,8 @@
 import {Button, Menu, MenuButton, MenuList, MenuItem} from "@chakra-ui/react";
 import {BsChevronDown} from "react-icons/bs";
+import useGameQeuryStore from "../store";
 
-interface Props {
-    selectSortOrders: (sortOrders: string) => void
-    sortOrder: string;
-}
-
-const SortSelector = ({selectSortOrders, sortOrder}: Props) => {
+const SortSelector = () => {
     const sortOrders = [
         {value: "", label: "Relevance"},
         {value: "-added", label: "Data added"},
@@ -15,15 +11,25 @@ const SortSelector = ({selectSortOrders, sortOrder}: Props) => {
         {value: "metacritic", label: "Popularity"},
         {value: "-rating", label: "Average rating"},
     ];
-    const currentSortOrder = sortOrders.find(sort => sort.value === sortOrder);
+    const sortOrder = useGameQeuryStore(s => s.gameQuery.sortOrders);
+    const selectSortOrders = useGameQeuryStore(s => s.setSortOrders)
+    const currentSortOrder = sortOrders.find((sort) => sort.value === sortOrder);
     return (
         <Menu>
             <MenuButton as={Button} rightIcon={<BsChevronDown/>} marginX="10">
-                Order by:{currentSortOrder?.label || "Relevance"}</MenuButton>
+                Order by:{currentSortOrder?.label || "Relevance"}
+            </MenuButton>
             <MenuList>
-                {sortOrders && sortOrders.map(sort => <MenuItem key={sort.value}
-                                                                value={sort.value}
-                                                                onClick={() => selectSortOrders(sort.value)}>{sort.label}</MenuItem>)}
+                {sortOrders &&
+                    sortOrders.map((sort) => (
+                        <MenuItem
+                            key={sort.value}
+                            value={sort.value}
+                            onClick={() => selectSortOrders(sort.value)}
+                        >
+                            {sort.label}
+                        </MenuItem>
+                    ))}
             </MenuList>
         </Menu>
     );
