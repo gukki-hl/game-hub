@@ -1,12 +1,14 @@
 import {useInfiniteQuery} from "@tanstack/react-query";
 import apiClient, {FetchResponse} from "../services/api-client";
-import {Platforms} from "../hooks/usePlatform";
+import {Platforms} from "./usePlatform";
 import ms from "ms";
 import useGameQeuryStore from "../store";
 
 export interface Game {
     id: number;
     name: string;
+    slug:string;
+    description_raw:string;
     background_image: string;
     parent_platforms: { platform: Platforms }[];
     metacritic: number;
@@ -15,7 +17,7 @@ export interface Game {
 
 const create = new apiClient<Game>("/games");
 
-const useGame = () => {
+const useGames = () => {
     const gameQuery = useGameQeuryStore(s => s.gameQuery)
     return useInfiniteQuery<FetchResponse<Game>, Error>({
         queryKey: ["/games", gameQuery], // 缓存 key
@@ -38,4 +40,4 @@ const useGame = () => {
 
 }
 
-export default useGame;
+export default useGames;

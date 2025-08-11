@@ -1,10 +1,11 @@
-import useGame from "../hooks/useGame";
+import useGame from "../hooks/useGames";
 import {SimpleGrid, Spinner} from "@chakra-ui/react";
 import GameCard from "./GameCard";
 import GameCardSkeleton from "./GameCardSkeleton";
 import GameCardContainer from "./GameCardContainer";
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import useGames from "../hooks/useGames";
 
 
 // GameGrid组件接受一个selectedGenre属性，用于过滤游戏列表
@@ -15,7 +16,7 @@ const GameGrid = () => {
         isLoading,
         fetchNextPage,
         hasNextPage,
-    } = useGame();
+    } = useGames();
     const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     if (error) return <p>{error.message}</p>;

@@ -11,7 +11,7 @@ const router = createBrowserRouter([
     errorElement:<ErrorPage/>,//错误路由
     children: [
       { index: true, element: <HomePage /> }, //默认子路由
-      { path: "game/:id", element: <GameDetailPage /> }, //game子路由
+      { path: "games/:slug", element: <GameDetailPage /> }, //game子路由
     ],
   },
 ]);
