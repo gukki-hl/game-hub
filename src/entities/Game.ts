@@ -1,14 +1,14 @@
-import { Trailers } from './Trailers';
-import { Genre } from "./Genre";
-import { Platforms } from "./Platforms";
-import { Publishers } from "./Publishers";
+import Trailers from "./Trailers";
+import Genre from "./Genre";
+import Platforms from "./Platforms";
+import Publishers from "./Publishers";
 
-export interface Game {
+export default interface Game {
   id: number;
   name: string;
   slug: string;
   genres: Genre[];
-  trailers:Trailers[];
+  trailers: Trailers[];
   publishers: Publishers[];
   description_raw: string;
   background_image: string;

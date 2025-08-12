@@ -1,6 +1,6 @@
-export interface screenshots{
-   id:number;
-   image:string; 
-   width:number;
-   height:number;
+export default interface screenshots {
+  id: number;
+  image: string;
+  width: number;
+  height: number;
 }

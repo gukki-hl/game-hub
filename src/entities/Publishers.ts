@@ -1,4 +1,4 @@
-export interface Publishers{
+export default interface Publishers{
     games_count:number;
     id:number;
     image_background:string;
