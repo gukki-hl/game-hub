@@ -1,3 +1,4 @@
+import { Trailers } from './Trailers';
 import { Genre } from "./Genre";
 import { Platforms } from "./Platforms";
 import { Publishers } from "./Publishers";
@@ -7,6 +8,7 @@ export interface Game {
   name: string;
   slug: string;
   genres: Genre[];
+  trailers:Trailers[];
   publishers: Publishers[];
   description_raw: string;
   background_image: string;
