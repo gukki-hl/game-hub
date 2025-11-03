@@ -1,0 +1,45 @@
+### 步骤 4：创建 .dockerignore
+
+创建 `.dockerignore` 文件（加快构建速度）：
+```
+# 依赖
+node_modules
+npm-debug.log
+yarn-error.log
+
+# 构建产物
+build
+dist
+
+# 环境变量
+.env
+.env.local
+.env.development
+.env.production
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 测试
+coverage
+.nyc_output
+
+# 文档
+README.md
+CHANGELOG.md
+docs/
+
+# CI/CD
+.github
+.gitlab-ci.yml
