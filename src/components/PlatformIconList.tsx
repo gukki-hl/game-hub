@@ -33,10 +33,13 @@ const PlatformIconList = ({ platforms }: PlatformIconListProps) => {
 
   return (
     <HStack marginY={1}>
-      //遍历平台数组，使用映射对象获取对应的图标组件
-      {platforms.map((p) => (
-        <Icon key={p.id} as={iconMap[p.slug]} color="gray.500" />
-      ))}
+      {/* 遍历平台数组，使用映射对象获取对应的图标组件 */}
+      {platforms.map((p) => {
+        const IconComponent = iconMap[p.slug];
+        return IconComponent ? (
+          <Icon key={p.id} as={IconComponent as any} color="gray.500" />
+        ) : null;
+      })}
     </HStack>
   );
 };
