@@ -57,7 +57,9 @@ jobs:
           environment: production
           version: ${{ steps.version.outputs.SENTRY_RELEASE }}
           sourcemaps: "./dist"
-          set_commits: "auto"
+          # 移除 set_commits 避免 Git 历史问题
+          # set_commits: 'auto'
+           ignore_missing: true  # 添加这一行
 
       - name: ✅ Build completed
         run: |
