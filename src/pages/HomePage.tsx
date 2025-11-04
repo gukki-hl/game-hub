@@ -1,11 +1,21 @@
-import { Grid, Show, GridItem, HStack,Box } from "@chakra-ui/react";
+import { Grid, Show, GridItem, HStack, Box } from "@chakra-ui/react";
 import GameGrid from "../components/GameGrid";
 import GameHeading from "../components/GameHeading";
 import GenreList from "../components/GenreList";
 import PlatformSelector from "../components/PlatformSelector";
 import SortSelector from "../components/SortSelector";
-
+import * as Sentry from "@sentry/react";
 const HomePage = () => {
+  // 测试 Sentry 错误捕获
+  const testSentryError = () => {
+    throw new Error("This is a test error for Sentry!");
+  };
+
+  // 测试自定义事件
+  const testSentryEvent = () => {
+    Sentry.captureMessage("Test event from Game Hub", "info");
+  };
+
   return (
     <>
       <Grid
@@ -34,6 +44,16 @@ const HomePage = () => {
           <GameGrid />
         </GridItem>
       </Grid>
+
+      {/* Sentry 测试按钮（仅开发环境显示） */}
+      {import.meta.env.DEV && (
+        <div style={{ position: "fixed", bottom: 20, right: 20, zIndex: 9999 }}>
+          <button onClick={testSentryEvent} style={{ marginRight: 10 }}>
+            Test Sentry Event
+          </button>
+          <button onClick={testSentryError}>Test Sentry Error</button>
+        </div>
+      )}
     </>
   );
 };
