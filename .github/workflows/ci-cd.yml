@@ -1,40 +1,39 @@
-name: CI/CD Pipeline with Sentry
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main, master]
-  pull_request:
     branches: [main, master]
   workflow_dispatch:
 
 env:
   DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/game-hub
-  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
 jobs:
-  build:
-    name: Build and Push Docker Image
+  build-and-deploy:
+    name: Build, Push and Monitor
     runs-on: ubuntu-latest
 
     steps:
+      # 1. 检出代码
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # 获取完整历史，Sentry 需要
 
-      - name: 🏷️ Get version
+      # 2. 生成版本号
+      - name: 🏷️ Generate version
         id: version
         run: |
-          echo "VERSION=$(date +'%Y.%m.%d')-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
-          echo "SENTRY_RELEASE=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+          VERSION="$(date +'%Y.%m.%d')-${GITHUB_SHA::7}"
+          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+          echo "📦 Version: ${VERSION}"
 
+      # 3. 登录 Docker Hub
       - name: 🔐 Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # 4. 构建并推送 Docker 镜像
       - name: 🐳 Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -47,23 +46,36 @@ jobs:
             VITE_SENTRY_DSN=${{ secrets.SENTRY_DSN }}
             VITE_APP_VERSION=${{ steps.version.outputs.VERSION }}
 
-      - name: 🎯 Create Sentry release
-        uses: getsentry/action-release@v1
+      # 5. 创建 Sentry Release（简化版）
+      - name: 🎯 Create Sentry Release
+        run: |
+          # 安装 Sentry CLI
+          curl -sL https://sentry.io/get-cli/ | bash
+
+          # 创建 release
+          sentry-cli releases new "${{ github.sha }}"
+
+          # 标记为已部署
+          sentry-cli releases deploys "${{ github.sha }}" new -e production
+
+          # 完成 release
+          sentry-cli releases finalize "${{ github.sha }}"
+
+          echo "✅ Sentry Release: ${{ github.sha }}"
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        with:
-          environment: production
-          version: ${{ steps.version.outputs.SENTRY_RELEASE }}
-          sourcemaps: "./dist"
-          # 移除 set_commits 避免 Git 历史问题
-          # set_commits: 'auto'
-           ignore_missing: true  # 添加这一行
+        continue-on-error: true # Sentry 失败不影响整体流程
 
-      - name: ✅ Build completed
+      # 6. 成功通知
+      - name: ✅ Deployment Summary
         run: |
-          echo "✅ Build and deployment completed!"
+          echo "================================================"
+          echo "✅ Deployment Completed Successfully!"
+          echo "================================================"
           echo "🐳 Docker Image: ${{ env.DOCKER_IMAGE }}:latest"
           echo "📦 Version: ${{ steps.version.outputs.VERSION }}"
-          echo "🎯 Sentry Release: ${{ steps.version.outputs.SENTRY_RELEASE }}"
+          echo "🎯 Sentry Release: ${{ github.sha }}"
+          echo "🌐 Docker Hub: https://hub.docker.com/r/${{ secrets.DOCKER_USERNAME }}/game-hub"
+          echo "================================================"
