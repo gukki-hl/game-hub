@@ -10,7 +10,7 @@ const GameHeading = () => {
   const setPlatformsId = useGameQeuryStore((s) => s.gameQuery.platformId);
   const platform = usePlatforms(setPlatformsId);
 
-  const heading = `${platform?.name || ""} ${genre?.name || ""} Game1`;
+  const heading = `${platform?.name || ""} ${genre?.name3 || ""} Game1`;
 
   return (
     <Heading marginX={10} fontSize="5xl">
