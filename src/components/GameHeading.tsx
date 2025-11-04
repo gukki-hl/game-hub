@@ -1,22 +1,21 @@
-import {Heading} from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
 import useGenre from "../hooks/useGenre";
-import usePlatforms from '../hooks/usePlatofroms'
+import usePlatforms from "../hooks/usePlatofroms";
 import useGameQeuryStore from "../store";
 
-
 const GameHeading = () => {
-    const setGenreId = useGameQeuryStore(s => s.gameQuery.genreId)
-    const genre = useGenre(setGenreId)
+  const setGenreId = useGameQeuryStore((s) => s.gameQuery.genreId);
+  const genre = useGenre(setGenreId);
 
-    const setPlatformsId = useGameQeuryStore(s => s.gameQuery.platformId)
-    const platform = usePlatforms(setPlatformsId);
+  const setPlatformsId = useGameQeuryStore((s) => s.gameQuery.platformId);
+  const platform = usePlatforms(setPlatformsId);
 
-    const heading = `${platform?.name || ""} ${genre?.name || ""} Game`;
+  const heading = `${platform?.name || ""} ${genre?.name || ""} Game1`;
 
-    return (
-        <Heading marginX={10} fontSize="5xl">
-            {heading}{" "}
-        </Heading>
-    );
+  return (
+    <Heading marginX={10} fontSize="5xl">
+      {heading}{" "}
+    </Heading>
+  );
 };
 export default GameHeading;
