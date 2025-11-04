@@ -2,29 +2,30 @@ name: Docker Build and Push
 
 on:
   push:
-    branches: [ main ]
+    branches: [main, master] # 同时支持 main 和 master
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch: # 允许手动触发
 
 env:
   DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/game-hub
 
 jobs:
   build:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
-    
+
     steps:
-      # 1. 检出代码
-      - name: Checkout code
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      # 2. 登录 Docker Hub
-      - name: Login to Docker Hub
+      - name: 🔐 Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 3. 构建并推送镜像
-      - name: Build and push
+      - name: 🐳 Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -33,8 +34,8 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:latest
             ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
 
-      # 4. 成功通知
-      - name: Success message
+      - name: ✅ Build completed
         run: |
-          echo "✅ Docker image pushed successfully!"
+          echo "✅ Docker image built and pushed successfully!"
           echo "Image: ${{ env.DOCKER_IMAGE }}:latest"
+          echo "SHA: ${{ env.DOCKER_IMAGE }}:${{ github.sha }}"
