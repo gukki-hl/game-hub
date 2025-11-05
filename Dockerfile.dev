@@ -1,0 +1,16 @@
+# Dockerfile.dev - 开发环境专用
+FROM node:18-alpine
+
+WORKDIR /app
+
+# 安装依赖
+COPY package*.json ./
+RUN npm install
+
+# 注意：不复制源代码，而是通过 volume 挂载
+# 这样可以支持热重载
+
+EXPOSE 5173
+
+# 启动开发服务器
+CMD ["npm", "run", "dev"]
