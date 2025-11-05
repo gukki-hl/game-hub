@@ -11,29 +11,28 @@ import router from "./routes";
 const queryClient = new QueryClient();
 
 
-// 初始化 Sentry（仅在生产环境）
-// 初始化 Sentry（仅在生产环境）
-if (import.meta.env.PROD) {
-  Sentry.init({
-    dsn: import.meta.env.VITE_SENTRY_DSN,
-    integrations: [
-      Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration({
-        maskAllText: false,
-        blockAllMedia: false,
-      }),
-    ],
-    // 性能监控
-    tracesSampleRate: 1.0,
-    // 会话录制
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1.0,
-    // 环境标识
-    environment: import.meta.env.MODE,
-    // 发布版本
-    release: import.meta.env.VITE_APP_VERSION || 'development',
-  });
-}
+// 初始化 Sentry（开发和生产环境都启用）
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration({
+      maskAllText: false,
+      blockAllMedia: false,
+    }),
+  ],
+  // 性能监控
+  tracesSampleRate: 1.0,
+  // 会话录制
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+  // 环境标识
+  environment: import.meta.env.MODE,
+  // 发布版本
+  release: import.meta.env.VITE_APP_VERSION || 'development',
+  // 开发环境下打印调试信息
+  debug: import.meta.env.DEV,
+});
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
